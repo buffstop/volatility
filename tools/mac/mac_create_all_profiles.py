@@ -56,11 +56,12 @@ def generate_profile(temp_dir, volatility_dir, profile_dir, profile):
     run_cmd(args)
 
     dwarf_info = os.path.join(temp_dir, "dwarf.txt")
-    # handle the change in filenames in 10.10
-    if os.path.isfile("/Volumes/KernelDebugKit/kernel.dSYM"):
-        kernel = "/Volumes/KernelDebugKit/kernel.dSYM"
-    else:
-        kernel = "/Volumes/KernelDebugKit/mach_kernel.dSYM"
+        
+    # NOTE: in 10.10 and higher, you have to:
+    # 1) Install Apples KernelDebugKit
+    # 2) Set the kernel to /Library/Developer/KDKs/KDK_YOUR_VERSION_NUMBER.kdk/System/Library/Kernels/kernel.dSYM
+    kernel = "/Library/Developer/KDKs/KDK_10.10_14A389.kdk/System/Library/Kernels/kernel.dSYM"
+
     args = ["/usr/bin/dwarfdump", "-arch", arch, "-i", kernel]
     run_cmd(args, output_file = dwarf_info)
 
@@ -74,11 +75,11 @@ def generate_profile(temp_dir, volatility_dir, profile_dir, profile):
     run_cmd(args, output_file = vtypes_file)
 
     symbol_file = dwarf_info + ".symbol.dsymutil"
-    # handle the change in filenames in 10.10
-    if os.path.isfile("/Volumes/KernelDebugKit/mach_kernel"):
-        kernel = "/Volumes/KernelDebugKit/mach_kernel"
-    else:
-        kernel = "/Volumes/KernelDebugKit/kernel"
+    # NOTE: in 10.10 and higher, you have to:
+    # 1) Install Apples KernelDebugKit
+    # 2) Set the kernel to /Library/Developer/KDKs/KDK_YOUR_VERSION_NUMBER.kdk/System/Library/Kernels/kernel
+    kernel = "/Library/Developer/KDKs/KDK_10.10_14A389.kdk/System/Library/Kernels/kernel"
+
     args = ["/usr/bin/dsymutil", "-s", "-arch", arch, kernel]
     run_cmd(args, output_file = symbol_file)    
 
